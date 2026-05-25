@@ -2,6 +2,7 @@ import type { Item } from "../data";
 import Monogram from "./Monogram";
 import CopyButton from "./CopyButton";
 import KeyMap from "./KeyMap";
+import NativeClipboard from "./NativeClipboard";
 
 type Props = {
   item: Item;
@@ -58,7 +59,9 @@ export default function ItemCard({ item, index, checked, onToggle }: Props) {
 
         <p className="card-desc">{item.desc}</p>
 
-        {officialPrimary ? (
+        {item.native ? (
+          <NativeClipboard />
+        ) : officialPrimary ? (
           <div className="install-block">
             <a
               className="dl-btn"
@@ -78,6 +81,7 @@ export default function ItemCard({ item, index, checked, onToggle }: Props) {
                   </code>
                   <CopyButton text={item.cmd} />
                 </div>
+                {item.caveat && <p className="caveat">⚠ {item.caveat}</p>}
               </div>
             )}
           </div>

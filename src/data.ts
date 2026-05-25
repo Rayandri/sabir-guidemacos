@@ -1,6 +1,6 @@
 // Contenu du guide. Edite ici pour ajouter/retirer des apps ou des etapes.
 
-export type KeyBind = { action: string; keys: string };
+export type KeyBind = { action: string; keys: string; primary?: boolean };
 
 export type Item = {
   id: string;
@@ -10,8 +10,10 @@ export type Item = {
   link?: string;
   linkLabel?: string;
   cmd?: string; // commande copiable
+  caveat?: string; // avertissement affiche sous la commande brew (ex: cask en retard)
   note?: string; // astuce / detail en plus
   keymap?: KeyBind[]; // raccourcis (Rectangle)
+  native?: boolean; // rend une carte speciale "natif macOS" (presse-papier)
 };
 
 export type SectionKind = "steps" | "apps" | "optional";
@@ -178,6 +180,8 @@ export const SECTIONS: Section[] = [
         link: "https://cursor.com",
         linkLabel: "cursor.com",
         cmd: "brew install --cask cursor",
+        caveat:
+          "Le cask Homebrew traîne souvent loin derrière (il est resté bloqué des versions entières en retard). Préfère le lien officiel — l'app se met à jour toute seule ensuite.",
       },
       {
         id: "claude-code",
@@ -187,7 +191,7 @@ export const SECTIONS: Section[] = [
         link: "https://code.claude.com/docs",
         linkLabel: "code.claude.com",
         cmd: "curl -fsSL https://claude.ai/install.sh | bash",
-        note: "Une fois installé, tape « claude » dans n'importe quel projet pour démarrer (login navigateur au 1er lancement). Alternative brew possible mais sans auto-update : brew install --cask claude-code",
+        note: "Une fois installé, tape « claude » dans n'importe quel projet pour démarrer (login navigateur au 1er lancement). N'installe PAS via Homebrew : le cask suit le canal « stable » pendant que l'updater interne vise « latest » → désynchro, et brew refuse de mettre à jour. L'installeur officiel s'auto-update proprement.",
       },
       {
         id: "claude-app",
@@ -197,6 +201,8 @@ export const SECTIONS: Section[] = [
         link: "https://claude.ai/download",
         linkLabel: "claude.ai/download",
         cmd: "brew install --cask claude",
+        caveat:
+          "Le cask Claude se désynchronise entre canaux (stable vs latest) et brew ne le met pas à jour tout seul. Télécharge plutôt depuis le site officiel : tu as la dernière version dès le départ et l'app se maintient seule.",
       },
       {
         id: "docker",
@@ -251,15 +257,15 @@ export const SECTIONS: Section[] = [
         id: "rectangle",
         title: "Rectangle — fenêtres au clavier",
         code: "RE",
-        desc: "Tu connais i3 sur Linux ? C'est l'esprit, version Mac. macOS gère très mal le fenêtrage : pas de snap natif comme Windows (coller une fenêtre à gauche/droite au clavier). Rectangle ajoute ça. Mon conseil : rebinds les raccourcis façon Windows comme moi (⌘ + flèches). Tu l'utiliseras 100 fois par jour.",
+        desc: "Tu connais i3 sur Linux ? C'est l'esprit, version Mac. macOS gère très mal le fenêtrage : pas de snap natif comme Windows (coller une fenêtre à gauche/droite au clavier). Rectangle ajoute ça. L'essentiel à rebinder façon Windows, c'est juste 3 raccourcis : moitié gauche, moitié droite, plein écran. Le reste reste sur les défauts de Rectangle.",
         link: "https://rectangleapp.com",
         linkLabel: "rectangleapp.com",
         cmd: "brew install --cask rectangle",
-        note: "Configure tes raccourcis dans Rectangle → Settings → Shortcuts pour matcher exactement les miens, ci-dessous.",
+        note: "Dans Rectangle → Settings → Shortcuts, change uniquement les 3 raccourcis « essentiels » ci-dessous pour matcher les miens. Les autres sont déjà bien par défaut.",
         keymap: [
-          { action: "Moitié gauche", keys: "⌘ ←" },
-          { action: "Moitié droite", keys: "⌘ →" },
-          { action: "Plein écran", keys: "⌘ ↑" },
+          { action: "Moitié gauche", keys: "⌘ ←", primary: true },
+          { action: "Moitié droite", keys: "⌘ →", primary: true },
+          { action: "Plein écran", keys: "⌘ ↑", primary: true },
           { action: "Restaurer", keys: "⌘ ↓" },
           { action: "Moitié haut", keys: "⌃ ⌥ ↑" },
           { action: "Moitié bas", keys: "⌃ ⌥ ↓" },
@@ -321,6 +327,7 @@ export const SECTIONS: Section[] = [
         id: "clipboard-spotlight",
         title: "Presse-papier : Spotlight natif",
         code: "CB",
+        native: true,
         desc: "Avant, il fallait une app dédiée (genre Maccy) pour garder l'historique des copier-coller. C'est devenu inutile : depuis macOS 26 (Tahoe), Spotlight garde l'historique du presse-papier nativement. Une app de moins à installer.",
         note: "Ouvre Spotlight (Cmd + Espace), va dans les modes de navigation et choisis l'historique du presse-papier (il garde tes copies récentes ~8h). Active-le une fois, c'est bon.",
       },

@@ -10,6 +10,7 @@ import TopProgress from "./components/TopProgress";
 import HudNav from "./components/HudNav";
 import Hero from "./components/Hero";
 import Phase from "./components/Phase";
+import InfoCallout from "./components/InfoCallout";
 import "./styles/index.css";
 
 export default function App() {
@@ -61,6 +62,7 @@ export default function App() {
           />
 
           <main className="content">
+            <InfoCallout />
             {SECTIONS.map((s) => (
               <Phase key={s.id} section={s} done={done} onToggle={toggle} />
             ))}

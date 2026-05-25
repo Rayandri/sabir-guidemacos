@@ -1,0 +1,187 @@
+/* ---------- CAVEAT (cask en retard) ---------- */
+.caveat {
+  margin-top: 9px;
+  font-size: 12.5px;
+  color: var(--amber);
+  background: rgba(255, 176, 0, 0.06);
+  border: 1px solid rgba(255, 176, 0, 0.22);
+  border-radius: 8px;
+  padding: 8px 11px;
+  line-height: 1.55;
+}
+
+/* ---------- INFO CALLOUT ---------- */
+.callout {
+  position: relative;
+  margin-bottom: 42px;
+  padding: 18px 20px 18px 24px;
+  background: var(--panel);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 240, 255, 0.22);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.callout-edge {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(var(--cyan), var(--magenta));
+  box-shadow: 0 0 14px rgba(0, 240, 255, 0.5);
+}
+.callout-head {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 15.5px;
+  color: #eef4fb;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  letter-spacing: 0.3px;
+}
+.callout-tag {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--cyan);
+  border: 1px solid rgba(0, 240, 255, 0.4);
+  border-radius: 5px;
+  padding: 2px 7px;
+}
+.callout-body {
+  color: var(--ink-dim);
+  font-size: 14px;
+  line-height: 1.66;
+  margin-top: 11px;
+}
+.callout-body b {
+  color: var(--ink);
+}
+.callout-body code {
+  font-family: var(--mono);
+  background: #05080e;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: 1px 6px;
+  font-size: 12.5px;
+  color: var(--cyan);
+}
+
+/* ---------- KEYMAP : essentiels vs defauts ---------- */
+.keymap-head.accent {
+  color: var(--sa);
+  background: color-mix(in srgb, var(--sa) 10%, transparent);
+}
+.keymap-head.muted {
+  color: var(--ink-faint);
+  border-top: 1px solid var(--line);
+  background: transparent;
+}
+.keymap-grid.dim {
+  opacity: 0.7;
+}
+.keybind.is-primary .kb-action {
+  color: #eef4fb;
+  font-weight: 600;
+}
+.keybind.is-primary kbd {
+  border-color: color-mix(in srgb, var(--sa) 65%, #2a3445);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--sa) 38%, transparent);
+  color: #fff;
+}
+
+/* ---------- NATIVE CLIPBOARD (mock Spotlight) ---------- */
+.native {
+  margin-top: 14px;
+}
+.native-head {
+  margin-bottom: 12px;
+}
+.native-badge {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 1px;
+  color: var(--green);
+  border: 1px solid rgba(0, 255, 156, 0.32);
+  background: rgba(0, 255, 156, 0.06);
+  border-radius: 6px;
+  padding: 3px 10px;
+}
+.spotlight {
+  max-width: 540px;
+  background: rgba(18, 22, 38, 0.66);
+  backdrop-filter: blur(22px) saturate(1.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow:
+    0 26px 70px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+.spot-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  color: var(--ink-dim);
+}
+.spot-q {
+  flex: 1;
+  font-size: 17px;
+  color: var(--ink);
+}
+.spot-hint {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-faint);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 2px 7px;
+}
+.spot-list {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.clip-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 11px;
+  border-radius: 10px;
+  transition: background 0.15s;
+}
+.clip-row.active {
+  background: rgba(0, 240, 255, 0.12);
+  box-shadow: inset 0 0 0 1px rgba(0, 240, 255, 0.2);
+}
+.clip-tag {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  padding: 2px 6px;
+  border-radius: 5px;
+  flex-shrink: 0;
+}
+.t-cmd { color: var(--green); background: rgba(0, 255, 156, 0.12); }
+.t-url { color: var(--cyan); background: rgba(0, 240, 255, 0.12); }
+.t-hex { color: var(--magenta); background: rgba(255, 43, 214, 0.12); }
+.t-txt { color: var(--amber); background: rgba(255, 176, 0, 0.12); }
+.clip-text {
+  flex: 1;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.clip-age {
+  font-size: 11px;
+  color: var(--ink-faint);
+  white-space: nowrap;
+}
