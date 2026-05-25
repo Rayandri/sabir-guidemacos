@@ -1,5 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
-import { SECTIONS, INSTALL_URL, type Item, type Section } from "./data";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import {
+  SECTIONS,
+  INSTALL_URL,
+  type Item,
+  type Section,
+} from "./data";
 import CopyButton from "./components/CopyButton";
 import "./App.css";
 
@@ -28,7 +33,7 @@ export default function App() {
   const doneCount = allItems.filter((id) => done[id]).length;
   const pct = Math.round((doneCount / allItems.length) * 100);
 
-  // surligne la section visible dans la nav
+  // nav : surligne la section visible
   useEffect(() => {
     const obs = new IntersectionObserver(
       (entries) => {
@@ -37,7 +42,7 @@ export default function App() {
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
         if (visible) setActiveId(visible.target.id);
       },
-      { rootMargin: "-30% 0px -60% 0px", threshold: [0, 0.25, 0.5, 1] },
+      { rootMargin: "-25% 0px -65% 0px", threshold: [0, 0.2, 0.5, 1] },
     );
     SECTIONS.forEach((s) => {
       const el = document.getElementById(s.id);
@@ -46,17 +51,43 @@ export default function App() {
     return () => obs.disconnect();
   }, []);
 
+  // reveal au scroll
+  useEffect(() => {
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add("is-visible");
+            obs.unobserve(e.target);
+          }
+        });
+      },
+      { rootMargin: "0px 0px -8% 0px", threshold: 0.06 },
+    );
+    document.querySelectorAll<HTMLElement>(".reveal").forEach((el) => obs.observe(el));
+    return () => obs.disconnect();
+  }, []);
+
   function toggle(id: string) {
     setDone((d) => ({ ...d, [id]: !d[id] }));
   }
-
   function reset() {
-    if (confirm("Remettre toute la progression a zero ?")) setDone({});
+    if (confirm("Remettre toute la progression à zéro ?")) setDone({});
   }
 
   return (
     <div className="app">
+      <div className="topbar">
+        <div className="topbar-fill" style={{ width: `${pct}%` }} />
+      </div>
+
       <Hero pct={pct} doneCount={doneCount} total={allItems.length} />
+
+      {pct === 100 && (
+        <div className="celebrate">
+          🎉 Tout est coché — bienvenue sur ton Mac, Sabir. Setup terminé.
+        </div>
+      )}
 
       <div className="layout">
         <nav className="toc" aria-label="Sommaire">
@@ -65,15 +96,17 @@ export default function App() {
             {SECTIONS.map((s) => {
               const total = s.items.length;
               const ok = s.items.filter((i) => done[i.id]).length;
+              const full = ok === total;
               return (
                 <li key={s.id}>
                   <a
                     href={`#${s.id}`}
                     className={activeId === s.id ? "active" : ""}
+                    style={{ "--sa": s.accent } as CSSProperties}
                   >
-                    <span className="toc-num">{s.num}</span>
+                    <span className="toc-dot" data-full={full} />
                     <span className="toc-label">{s.title}</span>
-                    <span className={`toc-count${ok === total ? " full" : ""}`}>
+                    <span className={`toc-count${full ? " full" : ""}`}>
                       {ok}/{total}
                     </span>
                   </a>
@@ -82,22 +115,16 @@ export default function App() {
             })}
           </ul>
           <button className="reset-btn" onClick={reset}>
-            reset progression
+            ↺ reset progression
           </button>
         </nav>
 
         <main className="content">
           {SECTIONS.map((s) => (
-            <SectionBlock
-              key={s.id}
-              section={s}
-              done={done}
-              onToggle={toggle}
-            />
+            <SectionBlock key={s.id} section={s} done={done} onToggle={toggle} />
           ))}
           <footer className="footer">
-            <span className="prompt">$</span> setup termine — bienvenue sur ton
-            Mac, Sabir. <span className="by">fait par Rayan 🤝</span>
+            <span className="prompt">$</span> echo "fait par Rayan pour Sabir 🤝"
           </footer>
         </main>
       </div>
@@ -105,6 +132,7 @@ export default function App() {
   );
 }
 
+/* ------------------------------------------------------------------ */
 function Hero({
   pct,
   doneCount,
@@ -117,49 +145,37 @@ function Hero({
   const oneLiner = `curl -fsSL ${INSTALL_URL} | bash`;
   return (
     <header className="hero">
+      <div className="hero-glow" aria-hidden />
       <div className="hero-inner">
-        <div className="window-dots" aria-hidden>
-          <span /> <span /> <span />
-        </div>
         <p className="kicker">
-          <span className="prompt">➜</span> ~/nouveau-mac
+          <span className="prompt">➜</span> ~/nouveau-mac —{" "}
+          <span className="blink">guide de Rayan</span>
         </p>
         <h1>
-          Mac Setup <span className="accent">— Sabir</span>
+          Mac Setup
+          <span className="accent"> pour Sabir</span>
         </h1>
         <p className="tagline">
-          Les apps a installer et les trucs a faire quand tu arrives sur ton
-          Mac. Coche au fur et a mesure, c'est sauvegarde tout seul.
+          Tout ce qu'il faut installer et régler en arrivant sur ton Mac :
+          les apps utiles, les outils dev, et le terminal exactement comme le
+          mien. Coche au fur et à mesure — c'est sauvegardé tout seul.
         </p>
 
-        <div className="install-card">
-          <div className="install-head">
-            <span className="dim">// tout installer d'un coup</span>
-          </div>
-          <div className="cmd-row big">
-            <code>{oneLiner}</code>
-            <CopyButton text={oneLiner} />
-          </div>
-          <div className="install-actions">
-            <a className="ghost-btn" href="/install.sh" download>
-              ⬇ telecharger install.sh
-            </a>
-            <a className="ghost-btn" href="/Brewfile" download>
-              ⬇ Brewfile
-            </a>
-          </div>
-          <p className="install-note">
-            Ce script fait tout : Homebrew, les apps, le terminal zsh + p10k. Tu
-            peux aussi tout faire a la main, section par section ci-dessous.
-          </p>
+        <div className="hero-stats">
+          <span>📂 {SECTIONS.length} sections</span>
+          <span>✅ {total} étapes</span>
+          <span>⏱️ ~30 min</span>
+          <span>💾 progression auto</span>
         </div>
+
+        <TerminalCard oneLiner={oneLiner} />
 
         <div className="progress">
           <div className="progress-bar">
             <div className="progress-fill" style={{ width: `${pct}%` }} />
           </div>
           <span className="progress-label">
-            {doneCount}/{total} faits — {pct}%
+            {doneCount}/{total} — {pct}%
           </span>
         </div>
       </div>
@@ -167,6 +183,58 @@ function Hero({
   );
 }
 
+/* ------------------------------------------------------------------ */
+function TerminalCard({ oneLiner }: { oneLiner: string }) {
+  const [typed, setTyped] = useState("");
+  const ref = useRef(false);
+
+  useEffect(() => {
+    if (ref.current) return;
+    ref.current = true;
+    let i = 0;
+    const id = setInterval(() => {
+      i++;
+      setTyped(oneLiner.slice(0, i));
+      if (i >= oneLiner.length) clearInterval(id);
+    }, 22);
+    return () => clearInterval(id);
+  }, [oneLiner]);
+
+  return (
+    <div className="term">
+      <div className="term-bar">
+        <span className="dots">
+          <i /> <i /> <i />
+        </span>
+        <span className="term-title">sabir@mac — ~</span>
+      </div>
+      <div className="term-body">
+        <p className="term-comment"># tout installer d'un coup (le raccourci rapide, via Homebrew)</p>
+        <p className="term-line">
+          <span className="prompt">$</span>{" "}
+          <span className="term-cmd">{typed}</span>
+          <span className="caret" />
+        </p>
+        <div className="term-actions">
+          <CopyButton text={oneLiner} label="copier la commande" />
+          <a className="ghost-btn" href="/install.sh" download>
+            ⬇ install.sh
+          </a>
+          <a className="ghost-btn" href="/Brewfile" download>
+            ⬇ Brewfile
+          </a>
+        </div>
+        <p className="term-note">
+          Sinon (recommandé pour avoir toujours la dernière version) : installe
+          chaque app depuis sa <strong>source officielle</strong>, section par
+          section ci-dessous.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
 function SectionBlock({
   section,
   done,
@@ -180,14 +248,18 @@ function SectionBlock({
     <section
       id={section.id}
       className={`section${section.kind === "optional" ? " optional" : ""}`}
+      style={{ "--sa": section.accent } as CSSProperties}
     >
-      <div className="section-head">
+      <div className="section-head reveal">
         <span className="section-num">{section.num}</span>
-        <h2>
-          {section.emoji} {section.title}
-        </h2>
+        <div>
+          <h2>
+            <span className="section-emoji">{section.emoji}</span>
+            {section.title}
+          </h2>
+          {section.intro && <p className="section-intro">{section.intro}</p>}
+        </div>
       </div>
-      {section.intro && <p className="section-intro">{section.intro}</p>}
       <div className="items">
         {section.items.map((item) => (
           <ItemRow
@@ -202,6 +274,7 @@ function SectionBlock({
   );
 }
 
+/* ------------------------------------------------------------------ */
 function ItemRow({
   item,
   checked,
@@ -211,20 +284,28 @@ function ItemRow({
   checked: boolean;
   onToggle: () => void;
 }) {
+  const isCask = item.cmd?.startsWith("brew install --cask") ?? false;
+  const officialPrimary = isCask && !!item.link;
+
   return (
-    <article className={`item${checked ? " checked" : ""}`}>
+    <article className={`item reveal${checked ? " checked" : ""}`}>
       <button
         className="check"
         onClick={onToggle}
         aria-pressed={checked}
-        aria-label={checked ? "Decocher" : "Cocher"}
+        aria-label={checked ? "Décocher" : "Cocher"}
       >
-        {checked ? "✓" : ""}
+        <span>✓</span>
       </button>
+
+      <div className="icon-tile" aria-hidden>
+        {item.icon}
+      </div>
+
       <div className="item-body">
         <div className="item-title-row">
           <h3 onClick={onToggle}>{item.title}</h3>
-          {item.link && (
+          {item.link && !officialPrimary && (
             <a
               className="link-badge"
               href={item.link}
@@ -235,15 +316,53 @@ function ItemRow({
             </a>
           )}
         </div>
+
         <p className="item-desc">{item.desc}</p>
-        {item.cmd && (
-          <div className="cmd-row">
-            <code>
-              <span className="prompt">$</span> {item.cmd}
-            </code>
-            <CopyButton text={item.cmd} />
+
+        {officialPrimary ? (
+          <>
+            <a
+              className="dl-btn"
+              href={item.link}
+              target="_blank"
+              rel="noreferrer"
+            >
+              ⬇ Télécharger — {item.linkLabel}
+            </a>
+            {item.cmd && (
+              <div className="alt-cmd">
+                <span className="alt-label">ou via Homebrew</span>
+                <div className="cmd-row">
+                  <code>
+                    <span className="prompt">$</span> {item.cmd}
+                  </code>
+                  <CopyButton text={item.cmd} />
+                </div>
+              </div>
+            )}
+          </>
+        ) : (
+          item.cmd && (
+            <div className="cmd-row">
+              <code>
+                <span className="prompt">$</span> {item.cmd}
+              </code>
+              <CopyButton text={item.cmd} />
+            </div>
+          )
+        )}
+
+        {item.keymap && (
+          <div className="keymap">
+            {item.keymap.map((k) => (
+              <div className="keybind" key={k.action}>
+                <span className="kb-action">{k.action}</span>
+                <kbd>{k.keys}</kbd>
+              </div>
+            ))}
           </div>
         )}
+
         {item.note && <p className="item-note">💡 {item.note}</p>}
       </div>
     </article>

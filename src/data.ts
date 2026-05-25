@@ -1,13 +1,17 @@
 // Contenu du guide. Edite ici pour ajouter/retirer des apps ou des etapes.
 
+export type KeyBind = { action: string; keys: string };
+
 export type Item = {
   id: string;
   title: string;
+  icon: string; // emoji affiche dans la tuile
   desc: string;
   link?: string;
   linkLabel?: string;
-  cmd?: string; // commande copiable (brew, etc.)
+  cmd?: string; // commande copiable
   note?: string; // astuce / detail en plus
+  keymap?: KeyBind[]; // raccourcis (Rectangle)
 };
 
 export type SectionKind = "steps" | "apps" | "optional";
@@ -17,6 +21,7 @@ export type Section = {
   num: string;
   title: string;
   emoji: string;
+  accent: string; // couleur d'accent (hex)
   intro?: string;
   kind: SectionKind;
   items: Item[];
@@ -29,77 +34,78 @@ export const SECTIONS: Section[] = [
   {
     id: "deballage",
     num: "00",
-    title: "Au deballage",
+    title: "Au déballage",
     emoji: "📦",
+    accent: "#6cb6ff",
     kind: "steps",
     intro:
-      "Les 5 min de reglages a faire en arrivant. Rien a installer, juste a cliquer.",
+      "Les 5 minutes de réglages à faire en arrivant. Rien à installer, juste à cliquer — mais ça change tout le confort par la suite.",
     items: [
       {
         id: "appleid",
         title: "Connexion Apple ID / iCloud",
-        desc:
-          "Reglages > [ton nom] en haut. Connecte ton Apple ID pour iCloud, App Store, Trousseau (mots de passe) et Localiser.",
+        icon: "🍎",
+        desc: "Le compte qui débloque iCloud, l'App Store, le trousseau de mots de passe synchronisé et « Localiser » si le Mac est perdu. Sans lui, la moitié du système est bridée. Réglages → ton nom, tout en haut — à faire en premier.",
       },
       {
         id: "maj",
-        title: "Mises a jour systeme",
-        desc:
-          "Reglages > General > Mise a jour de logiciels. Installe tout avant de bosser, ca evite des bugs random.",
+        title: "Mises à jour système",
+        icon: "🔄",
+        desc: "Un Mac « neuf » sort souvent d'usine avec une version en retard. Réglages → Général → Mise à jour de logiciels : installe tout maintenant, ça t'évite des bugs aléatoires et des incompatibilités d'outils dev plus tard.",
       },
       {
         id: "clavier",
-        title: "Clavier rapide (dev)",
-        desc:
-          "Reglages > Clavier : monte la vitesse de repetition au max et le delai au min. Desactive la correction auto / majuscule auto (penible pour coder).",
+        title: "Clavier rapide (mode dev)",
+        icon: "⌨️",
+        desc: "Par défaut macOS « corrige » ton texte et répète les touches lentement — l'enfer pour coder (il met des majuscules, transforme tes variables). Réglages → Clavier : vitesse de répétition au max, délai au min, et désactive correction + majuscule auto.",
       },
       {
         id: "finder",
         title: "Finder utilisable",
-        desc:
-          "Dans Finder : affiche les extensions de fichiers et la barre de chemin (menu Presentation). Raccourci Cmd+Shift+. pour voir les fichiers caches.",
-        note: "Reglages Finder > Avance > coche \"Afficher toutes les extensions\".",
+        icon: "📁",
+        desc: "Le Finder cache des choses utiles par défaut : extensions de fichiers masquées, pas de barre de chemin, fichiers cachés invisibles (.env, .zshrc). Active la barre de chemin + les extensions (menu Présentation).",
+        note: "Cmd + Shift + . affiche/masque les fichiers cachés. Réglages Finder → Avancé → coche « Afficher toutes les extensions ».",
       },
       {
         id: "trackpad",
         title: "Trackpad",
-        desc:
-          "Reglages > Trackpad : active \"Toucher pour cliquer\" et monte la vitesse du curseur. Confort immediat.",
+        icon: "👆",
+        desc: "macOS désactive « toucher pour cliquer » par défaut et met un curseur lent. Réglages → Trackpad : active le tap-to-click et monte la vitesse du curseur. Cinq secondes de réglage, un confort permanent.",
       },
       {
         id: "filevault",
-        title: "Securite : FileVault + pare-feu",
-        desc:
-          "Reglages > Confidentialite et securite : active FileVault (chiffrement du disque) et le pare-feu. Si le Mac est vole, tes donnees sont illisibles.",
+        title: "Sécurité : FileVault + pare-feu",
+        icon: "🔒",
+        desc: "Sans FileVault, quelqu'un qui vole le Mac peut lire ton disque en le branchant ailleurs. FileVault chiffre tout, lié à ton mot de passe. Réglages → Confidentialité et sécurité → FileVault, et active le pare-feu pendant que tu y es.",
       },
     ],
   },
   {
     id: "prerequis",
     num: "01",
-    title: "Les prerequis (a faire en 1er)",
+    title: "Les prérequis (en premier)",
     emoji: "🧱",
+    accent: "#ffa657",
     kind: "apps",
     intro:
-      "Tout le reste depend de ces deux la. A lancer dans l'app Terminal (Cmd+Espace, tape \"Terminal\").",
+      "Tout le reste dépend de ces deux-là. À lancer dans l'app Terminal (Cmd + Espace, tape « Terminal »).",
     items: [
       {
         id: "xcode-clt",
         title: "Xcode Command Line Tools",
-        desc:
-          "Les compilateurs + git de base fournis par Apple. Beaucoup d'outils refusent de s'installer sans ca.",
+        icon: "🛠️",
+        desc: "La boîte à outils de base d'Apple : compilateurs, make, et un git de secours. Beaucoup d'outils refusent de s'installer sans. macOS ne les met pas par défaut — une commande règle ça.",
         cmd: "xcode-select --install",
       },
       {
         id: "homebrew",
         title: "Homebrew",
-        desc:
-          "LE gestionnaire de paquets du Mac. C'est lui qui installe quasiment tout ce qui suit, en une commande.",
+        icon: "🍺",
+        desc: "macOS n'a aucun gestionnaire de paquets natif (contrairement à apt sur Linux). Homebrew comble ce manque : c'est l'« apt du Mac ». Il installe 90 % de ce qui suit en une ligne et garde tout à jour avec brew upgrade.",
         link: "https://brew.sh",
         linkLabel: "brew.sh",
         cmd: '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"',
-        note:
-          "Apres l'install, ajoute brew au PATH :  echo 'eval \"$(/opt/homebrew/bin/brew shellenv)\"' >> ~/.zprofile && eval \"$(/opt/homebrew/bin/brew shellenv)\"",
+        note: 'Après l\'install, ajoute brew au PATH :  echo \'eval "$(/opt/homebrew/bin/brew shellenv)"\' >> ~/.zprofile && eval "$(/opt/homebrew/bin/brew shellenv)"',
       },
     ],
   },
@@ -108,15 +114,16 @@ export const SECTIONS: Section[] = [
     num: "02",
     title: "Terminal & shell (le vibe Rayan)",
     emoji: "🖥️",
+    accent: "#6ee787",
     kind: "apps",
     intro:
-      "Le setup zsh + Powerlevel10k. Le plus simple : lance le script tout-en-un en haut de page, il fait tout ca automatiquement.",
+      "Le setup zsh + Powerlevel10k. Le plus simple : lance le script tout-en-un en haut de page, il fait tout ça automatiquement.",
     items: [
       {
         id: "iterm2",
         title: "iTerm2",
-        desc:
-          "Le terminal qu'on utilise (mieux que le Terminal d'Apple : split, recherche, themes).",
+        icon: "💻",
+        desc: "Le Terminal d'Apple est minimal. iTerm2 ajoute ce qui manque : volets divisés, recherche, profils, vraies couleurs, raccourcis. C'est ta maison quand tu codes.",
         link: "https://iterm2.com",
         linkLabel: "iterm2.com",
         cmd: "brew install --cask iterm2",
@@ -124,23 +131,21 @@ export const SECTIONS: Section[] = [
       {
         id: "firacode",
         title: "FiraCode Nerd Font",
-        desc:
-          "La police avec les icones. OBLIGATOIRE pour Powerlevel10k, sinon le prompt affiche des carres.",
+        icon: "🔤",
+        desc: "Powerlevel10k affiche des icônes (git, dossiers, flèches) que les polices normales ne contiennent pas → sinon tu verrais des carrés vides. Les Nerd Fonts embarquent ces glyphes. Bonus : les ligatures (=>, !=) rendent le code plus lisible.",
         link: "https://www.nerdfonts.com",
         linkLabel: "nerdfonts.com",
         cmd: "brew install --cask font-fira-code-nerd-font",
-        note:
-          "Ensuite dans iTerm2 > Settings > Profiles > Text > Font : choisis \"FiraCode Nerd Font\".",
+        note: 'Ensuite dans iTerm2 → Settings → Profiles → Text → Font : choisis « FiraCode Nerd Font ».',
       },
       {
         id: "zsh",
         title: "zsh + Oh My Zsh + Powerlevel10k",
-        desc:
-          "Le shell stylise de Rayan : oh-my-zsh, theme p10k, plugins (autosuggestions, syntax-highlighting). Le script tout-en-un l'installe pour toi.",
+        icon: "🐚",
+        desc: "macOS est livré avec zsh tout nu. Ici on installe MON setup complet : Oh My Zsh, le thème Powerlevel10k, et les plugins qui changent la vie (autocomplétion, coloration syntaxique, suggestions d'historique). Le script tout-en-un te le pose clé en main, identique au mien.",
         link: "https://github.com/Rayandri/zsh",
         linkLabel: "github.com/Rayandri/zsh",
-        note:
-          "Au 1er lancement, p10k peut proposer un assistant de config : tu peux le passer, le config_p10k de Rayan est deja applique.",
+        note: "Au 1er lancement, p10k peut proposer un assistant de config : tu peux le passer, mon config_p10k est déjà appliqué.",
       },
     ],
   },
@@ -149,14 +154,16 @@ export const SECTIONS: Section[] = [
     num: "03",
     title: "Dev — les essentiels",
     emoji: "⚙️",
+    accent: "#d292ff",
     kind: "apps",
     intro:
-      "Les outils de dev qu'on utilise au quotidien. Chacun avec son lien si tu veux preferer l'install manuelle.",
+      "Les outils de dev qu'on utilise au quotidien. Chacun avec son lien officiel si tu préfères l'install manuelle.",
     items: [
       {
         id: "vscode",
         title: "Visual Studio Code",
-        desc: "L'editeur de code de reference. Extensions a gogo.",
+        icon: "🧩",
+        desc: "macOS n'a aucun éditeur de code digne de ce nom par défaut (TextEdit ne compte pas). VS Code est le plus utilisé au monde : léger, extensible à l'infini, parfait pour démarrer sur n'importe quel projet.",
         link: "https://code.visualstudio.com",
         linkLabel: "code.visualstudio.com",
         cmd: "brew install --cask visual-studio-code",
@@ -164,8 +171,8 @@ export const SECTIONS: Section[] = [
       {
         id: "cursor",
         title: "Cursor",
-        desc:
-          "VS Code booste a l'IA (autocompletion + chat sur ta codebase). On l'utilise beaucoup.",
+        icon: "✨",
+        desc: "VS Code dopé à l'IA : autocomplétion intelligente + un chat qui connaît toute ta codebase. On l'utilise beaucoup au quotidien — une fois habitué, tu ne reviens pas en arrière.",
         link: "https://cursor.com",
         linkLabel: "cursor.com",
         cmd: "brew install --cask cursor",
@@ -173,16 +180,18 @@ export const SECTIONS: Section[] = [
       {
         id: "claude-code",
         title: "Claude Code (CLI)",
-        desc:
-          "L'agent IA dans le terminal (celui qui a genere ce site). Tape \"claude\" dans n'importe quel projet.",
-        link: "https://claude.com/claude-code",
-        linkLabel: "claude.com/claude-code",
-        cmd: "brew install --cask claude-code",
+        icon: "🤖",
+        desc: "L'agent IA directement dans le terminal — c'est littéralement lui qui a codé et déployé ce site. On l'installe avec l'installeur officiel (auto-update intégré, pas besoin de Node), PAS via Homebrew. Il faut un compte Anthropic payant.",
+        link: "https://code.claude.com/docs",
+        linkLabel: "code.claude.com",
+        cmd: "curl -fsSL https://claude.ai/install.sh | bash",
+        note: "Une fois installé, tape « claude » dans n'importe quel projet pour démarrer (login navigateur au 1er lancement). Alternative brew possible mais sans auto-update : brew install --cask claude-code",
       },
       {
         id: "claude-app",
         title: "Claude (app desktop)",
-        desc: "L'app de chat Claude pour le quotidien hors code.",
+        icon: "💬",
+        desc: "L'app Claude pour tout ce qui n'est pas du code : réflexion, rédaction, recherche, analyse de captures. Toujours à portée de raccourci, à côté du terminal.",
         link: "https://claude.ai/download",
         linkLabel: "claude.ai/download",
         cmd: "brew install --cask claude",
@@ -190,8 +199,8 @@ export const SECTIONS: Section[] = [
       {
         id: "docker",
         title: "Docker Desktop",
-        desc:
-          "Pour faire tourner les conteneurs (bases de donnees, services, etc.) en local.",
+        icon: "🐳",
+        desc: "Fait tourner des services (bases de données, API, redis…) dans des conteneurs isolés, sans rien installer en dur sur le Mac ni polluer le système. Quasi tous nos projets en dépendent.",
         link: "https://www.docker.com/products/docker-desktop",
         linkLabel: "docker.com",
         cmd: "brew install --cask docker-desktop",
@@ -199,19 +208,18 @@ export const SECTIONS: Section[] = [
       {
         id: "node",
         title: "Node.js (via nvm)",
-        desc:
-          "Runtime JavaScript. On passe par nvm pour jongler entre les versions de Node selon les projets.",
+        icon: "🟢",
+        desc: "Le runtime JavaScript (back, front, scripts, build). On passe par nvm parce que chaque projet veut sa version : l'un Node 18, l'autre Node 22 — nvm switche en une commande au lieu de tout casser.",
         link: "https://github.com/nvm-sh/nvm",
         linkLabel: "github.com/nvm-sh/nvm",
         cmd: "brew install nvm",
-        note:
-          "Apres : mkdir -p ~/.nvm puis ajoute dans ~/.zshrc :  export NVM_DIR=\"$HOME/.nvm\"  et  [ -s \"/opt/homebrew/opt/nvm/nvm.sh\" ] && . \"/opt/homebrew/opt/nvm/nvm.sh\"  — ensuite : nvm install --lts",
+        note: 'Après : mkdir -p ~/.nvm puis ajoute dans ~/.zshrc :  export NVM_DIR="$HOME/.nvm"  et  [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && . "/opt/homebrew/opt/nvm/nvm.sh"  — ensuite : nvm install --lts',
       },
       {
         id: "pyenv",
         title: "Python (via pyenv)",
-        desc:
-          "Pour gerer plusieurs versions de Python proprement (jamais le Python systeme).",
+        icon: "🐍",
+        desc: "macOS embarque un Python système qu'il ne faut JAMAIS bricoler (le système s'en sert). pyenv installe tes propres versions à côté, et tu changes de version par projet sans rien casser.",
         link: "https://github.com/pyenv/pyenv",
         linkLabel: "github.com/pyenv/pyenv",
         cmd: "brew install pyenv",
@@ -219,8 +227,8 @@ export const SECTIONS: Section[] = [
       {
         id: "gh",
         title: "Git + GitHub CLI (gh)",
-        desc:
-          "git est deja la (Xcode CLT). gh permet de se connecter a GitHub et cloner/creer des repos sans token galere.",
+        icon: "🐙",
+        desc: "git est déjà là (via Xcode CLT). gh, c'est la CLI officielle GitHub : tu connectes ton compte une fois, puis tu clones / crées des repos / ouvres des PR sans jamais te battre avec les tokens d'accès.",
         link: "https://cli.github.com",
         linkLabel: "cli.github.com",
         cmd: "brew install gh && gh auth login",
@@ -230,73 +238,89 @@ export const SECTIONS: Section[] = [
   {
     id: "utils",
     num: "04",
-    title: "Utilitaires Mac — confort",
+    title: "Utilitaires Mac — combler les manques",
     emoji: "🧰",
+    accent: "#56d4dd",
     kind: "apps",
     intro:
-      "Les petits outils qui changent la vie sur Mac. A installer dans la foulee.",
+      "macOS est génial mais il manque des trucs de base que Windows/Linux ont. Voici les apps qui comblent ces manques — tu les installeras une fois et tu ne les remarqueras plus, tellement c'est devenu naturel.",
     items: [
       {
         id: "rectangle",
-        title: "Rectangle",
-        desc:
-          "Gestion des fenetres au clavier (snap moitie d'ecran, plein ecran...). Indispensable.",
+        title: "Rectangle — fenêtres au clavier",
+        icon: "🪟",
+        desc: "Tu connais i3 sur Linux ? C'est l'esprit, version Mac. macOS gère très mal le fenêtrage : pas de snap natif comme Windows (coller une fenêtre à gauche/droite au clavier). Rectangle ajoute ça. Mon conseil : rebinds les raccourcis façon Windows comme moi (⌘ + flèches). Tu l'utiliseras 100 fois par jour.",
         link: "https://rectangleapp.com",
         linkLabel: "rectangleapp.com",
         cmd: "brew install --cask rectangle",
+        note: "Configure tes raccourcis dans Rectangle → Settings → Shortcuts pour matcher exactement les miens 👇",
+        keymap: [
+          { action: "Moitié gauche", keys: "⌘ ←" },
+          { action: "Moitié droite", keys: "⌘ →" },
+          { action: "Plein écran", keys: "⌘ ↑" },
+          { action: "Restaurer", keys: "⌘ ↓" },
+          { action: "Moitié haut", keys: "⌃ ⌥ ↑" },
+          { action: "Moitié bas", keys: "⌃ ⌥ ↓" },
+          { action: "Coin haut-gauche", keys: "⌃ ⌥ U" },
+          { action: "Coin haut-droite", keys: "⌃ ⌥ I" },
+          { action: "Coin bas-gauche", keys: "⌃ ⌥ J" },
+          { action: "Coin bas-droite", keys: "⌃ ⌥ K" },
+          { action: "Centrer", keys: "⌃ ⌥ C" },
+          { action: "Écran suivant", keys: "⇧ ⌘ →" },
+          { action: "Écran précédent", keys: "⇧ ⌘ ←" },
+        ],
       },
       {
         id: "alttab",
-        title: "AltTab",
-        desc:
-          "Le Alt+Tab facon Windows : aperçu de toutes les fenetres pour switcher vite.",
+        title: "AltTab — vrai Alt+Tab",
+        icon: "🔲",
+        desc: "Le Cmd+Tab d'Apple groupe par application et ne montre pas les fenêtres une par une — pénible quand tu as 3 fenêtres VS Code ouvertes. AltTab apporte le vrai Alt+Tab façon Windows : un aperçu visuel de chaque fenêtre pour switcher d'un coup d'œil.",
         link: "https://alt-tab-macos.netlify.app",
         linkLabel: "alt-tab-macos.netlify.app",
         cmd: "brew install --cask alt-tab",
       },
       {
         id: "amphetamine",
-        title: "Amphetamine",
-        desc:
-          "Empeche le Mac de se mettre en veille (utile pendant un build, un download, une demo). Gratuit, uniquement sur l'App Store.",
+        title: "Amphetamine — garder éveillé",
+        icon: "💊",
+        desc: "macOS met le Mac en veille tout seul, ce qui peut couper un build, un téléchargement ou une démo. Amphetamine garde la machine éveillée d'un clic, avec minuteries et conditions. Gratuit, mais uniquement sur le Mac App Store (pas dispo via brew).",
         link: "https://apps.apple.com/app/amphetamine/id937984704",
         linkLabel: "App Store",
-        note: "Pas dispo via brew (app exclusivement App Store) : clique le lien et installe-la depuis le Mac App Store.",
+        note: "Clique le lien et installe-la depuis le Mac App Store — c'est la seule source officielle.",
       },
       {
         id: "macsfan",
-        title: "Macs Fan Control",
-        desc:
-          "Controle des ventilos / monitoring des temperatures. Pratique quand ca chauffe sous gros build.",
+        title: "Macs Fan Control — températures",
+        icon: "🌬️",
+        desc: "macOS ne montre ni les températures ni la vitesse des ventilos, et il les pousse souvent trop tard. Macs Fan Control affiche tout et te laisse forcer la ventilation quand un gros build fait chauffer la machine.",
         link: "https://crystalidea.com/macs-fan-control",
         linkLabel: "crystalidea.com",
         cmd: "brew install --cask macs-fan-control",
       },
       {
         id: "stats",
-        title: "Stats",
-        desc:
-          "Moniteur systeme dans la barre de menu (CPU, RAM, reseau, batterie). Leger et propre.",
+        title: "Stats — moniteur barre de menu",
+        icon: "📊",
+        desc: "macOS n'a aucun moniteur système dans la barre de menu (il faut ouvrir « Moniteur d'activité » à la main). Stats affiche CPU, RAM, réseau, batterie et température en permanence. Léger, open-source et élégant.",
         link: "https://github.com/exelban/stats",
         linkLabel: "github.com/exelban/stats",
         cmd: "brew install --cask stats",
       },
       {
         id: "appcleaner",
-        title: "AppCleaner",
-        desc:
-          "Desinstalle une app ET tous ses fichiers caches (sur Mac, glisser a la corbeille laisse des restes).",
+        title: "AppCleaner — désinstaller proprement",
+        icon: "🧹",
+        desc: "Sur macOS, « désinstaller » = glisser l'app à la corbeille… sauf que ça laisse plein de fichiers planqués (préférences, caches, support) qui s'accumulent. AppCleaner détecte tous ces restes et supprime l'app en entier, proprement.",
         link: "https://freemacsoft.net/appcleaner",
         linkLabel: "freemacsoft.net",
         cmd: "brew install --cask appcleaner",
       },
       {
         id: "clipboard-spotlight",
-        title: "Presse-papier : Spotlight natif (pas besoin de Maccy)",
-        desc:
-          "macOS 26 (Tahoe) a un historique de presse-papier directement dans Spotlight. Plus besoin d'une app dediee comme Maccy.",
-        note:
-          "Ouvre Spotlight (Cmd+Espace), va dans les modes de navigation et choisis l'historique du presse-papier (il garde tes copies recentes ~8h). Active-le une fois et c'est bon.",
+        title: "Presse-papier : Spotlight natif (plus besoin de Maccy)",
+        icon: "📋",
+        desc: "Avant, il fallait une app dédiée (genre Maccy) pour garder l'historique des copier-coller. C'est devenu inutile : depuis macOS 26 (Tahoe), Spotlight garde l'historique du presse-papier nativement. Une app de moins à installer.",
+        note: "Ouvre Spotlight (Cmd + Espace), va dans les modes de navigation et choisis l'historique du presse-papier (il garde tes copies récentes ~8h). Active-le une fois, c'est bon.",
       },
     ],
   },
@@ -305,15 +329,16 @@ export const SECTIONS: Section[] = [
     num: "05",
     title: "Plus tard / optionnel",
     emoji: "🗂️",
+    accent: "#f2cc60",
     kind: "optional",
     intro:
-      "Pas urgent au demarrage. A garder sous le coude quand le besoin se presente.",
+      "Pas urgent au démarrage. À garder sous le coude pour le jour où le besoin se présente.",
     items: [
       {
         id: "macmousefix",
         title: "Mac Mouse Fix",
-        desc:
-          "Seulement si tu veux binder les boutons d'une souris (gestes, raccourcis). Pas necessaire tout de suite.",
+        icon: "🖱️",
+        desc: "Utile seulement si tu branches une souris : macOS gère mal le défilement (saccadé) et les boutons latéraux d'une souris tierce. Mac Mouse Fix rend le scroll fluide et te laisse binder les boutons (gestes, raccourcis). Rien d'urgent — le jour où tu as une souris.",
         link: "https://macmousefix.com",
         linkLabel: "macmousefix.com",
         cmd: "brew install --cask mac-mouse-fix",
@@ -321,70 +346,11 @@ export const SECTIONS: Section[] = [
       {
         id: "hiddenbar",
         title: "Hidden Bar",
-        desc:
-          "Range les icones de la barre de menu. Sur ton 16 pouces tu as la place, donc pas utile au debut — pour plus tard si la barre se remplit.",
+        icon: "🙈",
+        desc: "Quand la barre de menu se remplit d'icônes, macOS n'offre aucun moyen de les ranger. Hidden Bar les masque derrière une flèche. Sur ton 16 pouces tu as largement la place au début — à garder pour quand la barre déborde.",
         link: "https://github.com/dwarvesf/hidden",
         linkLabel: "github.com/dwarvesf/hidden",
         cmd: "brew install --cask hiddenbar",
-      },
-    ],
-  },
-  {
-    id: "reste",
-    num: "06",
-    title: "Le reste (rapide, tu trouveras)",
-    emoji: "🚀",
-    kind: "apps",
-    intro:
-      "Les apps grand public, rien a expliquer. Installe ce dont tu as besoin (ou via l'App Store directement).",
-    items: [
-      {
-        id: "brave",
-        title: "Brave",
-        desc: "Navigateur (bloqueur de pub integre).",
-        cmd: "brew install --cask brave-browser",
-      },
-      {
-        id: "bitwarden",
-        title: "Bitwarden",
-        desc: "Gestionnaire de mots de passe.",
-        cmd: "brew install --cask bitwarden",
-      },
-      {
-        id: "vlc",
-        title: "VLC",
-        desc: "Lecteur video qui lit tout.",
-        cmd: "brew install --cask vlc",
-      },
-      {
-        id: "slack",
-        title: "Slack",
-        desc: "Messagerie equipe.",
-        cmd: "brew install --cask slack",
-      },
-      {
-        id: "discord",
-        title: "Discord",
-        desc: "Chat / vocal.",
-        cmd: "brew install --cask discord",
-      },
-      {
-        id: "telegram",
-        title: "Telegram",
-        desc: "Messagerie.",
-        cmd: "brew install --cask telegram",
-      },
-      {
-        id: "whatsapp",
-        title: "WhatsApp",
-        desc: "Messagerie.",
-        cmd: "brew install --cask whatsapp",
-      },
-      {
-        id: "ia",
-        title: "ChatGPT / Gemini / Perplexity",
-        desc: "Les autres apps IA, au choix.",
-        cmd: "brew install --cask chatgpt",
       },
     ],
   },

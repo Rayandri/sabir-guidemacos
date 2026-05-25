@@ -23,9 +23,10 @@ brew "coreutils"
 # --- Dev : apps ---
 cask "visual-studio-code"
 cask "cursor"
-cask "claude-code"
 cask "claude"
 cask "docker-desktop"
+# Claude Code (CLI) s'installe via l'installeur officiel, pas via brew :
+#   curl -fsSL https://claude.ai/install.sh | bash
 
 # --- Utilitaires Mac (confort) ---
 cask "rectangle"
