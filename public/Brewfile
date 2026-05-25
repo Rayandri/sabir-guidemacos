@@ -1,0 +1,35 @@
+# Brewfile - setup Mac de Sabir (par Rayan)
+# Usage :  brew bundle --file=Brewfile
+# (Amphetamine, Mac Mouse Fix et Hidden Bar ne sont pas ici : App Store / optionnels.)
+
+# --- Police (obligatoire pour Powerlevel10k) ---
+cask "font-fira-code-nerd-font"
+
+# --- Terminal ---
+cask "iterm2"
+
+# --- Dev : outils CLI ---
+brew "git"
+brew "gh"
+brew "nvm"
+brew "pyenv"
+brew "neovim"
+brew "bat"
+brew "tree"
+brew "htop"
+brew "wget"
+brew "coreutils"
+
+# --- Dev : apps ---
+cask "visual-studio-code"
+cask "cursor"
+cask "claude-code"
+cask "claude"
+cask "docker-desktop"
+
+# --- Utilitaires Mac (confort) ---
+cask "rectangle"
+cask "alt-tab"
+cask "macs-fan-control"
+cask "stats"
+cask "appcleaner"
