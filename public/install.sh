@@ -1,7 +1,7 @@
 #!/bin/bash
 # =============================================================
 #  Setup Mac de Sabir — par Rayan
-#  Usage :  curl -fsSL https://<ce-site>/install.sh | bash
+#  Usage :  curl -fsSL https://sabir-guidemacos.vercel.app/install.sh | bash
 #  Idempotent : tu peux le relancer sans rien casser.
 # =============================================================
 set -e

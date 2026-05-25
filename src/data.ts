@@ -23,7 +23,7 @@ export type Section = {
 };
 
 // URL de l'installeur tout-en-un (mise a jour apres deploiement Vercel).
-export const INSTALL_URL = "https://__VERCEL_URL__/install.sh";
+export const INSTALL_URL = "https://sabir-guidemacos.vercel.app/install.sh";
 
 export const SECTIONS: Section[] = [
   {

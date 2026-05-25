@@ -26,7 +26,7 @@ npm run preview  # apercu du build
 ## Le script tout-en-un
 
 ```bash
-curl -fsSL https://<url-vercel>/install.sh | bash
+curl -fsSL https://sabir-guidemacos.vercel.app/install.sh | bash
 ```
 
 Fait : Xcode CLT → Homebrew → apps (brew bundle) → Oh My Zsh + Powerlevel10k + plugins
