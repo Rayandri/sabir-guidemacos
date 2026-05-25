@@ -1,0 +1,156 @@
+:root {
+  --bg: #05060c;
+  --bg2: #090b15;
+  --panel: rgba(11, 14, 26, 0.72);
+  --panel-solid: #0b0e1a;
+  --glass: rgba(16, 20, 36, 0.55);
+
+  --ink: #d8e2f2;
+  --ink-dim: #818eaa;
+  --ink-faint: #525d77;
+
+  --line: rgba(120, 150, 200, 0.16);
+  --line-soft: rgba(120, 150, 200, 0.08);
+
+  --cyan: #00f0ff;
+  --magenta: #ff2bd6;
+  --purple: #a855ff;
+  --green: #00ff9c;
+  --amber: #ffb000;
+  --orange: #ff6b3d;
+
+  --display: "Orbitron", system-ui, sans-serif;
+  --ui: "Chakra Petch", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --maxw: 1180px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background:
+    radial-gradient(1100px 600px at 80% -8%, rgba(0, 240, 255, 0.08), transparent 60%),
+    radial-gradient(900px 600px at 5% 4%, rgba(255, 43, 214, 0.07), transparent 58%),
+    radial-gradient(900px 700px at 50% 110%, rgba(168, 85, 255, 0.08), transparent 60%),
+    var(--bg);
+  color: var(--ink);
+  font-family: var(--ui);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+a {
+  color: var(--cyan);
+  text-decoration: none;
+}
+code,
+kbd,
+.mono {
+  font-family: var(--mono);
+}
+::selection {
+  background: rgba(0, 240, 255, 0.28);
+  color: #fff;
+}
+
+::-webkit-scrollbar {
+  width: 11px;
+  height: 11px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(var(--cyan), var(--magenta));
+  border-radius: 8px;
+  border: 3px solid var(--bg);
+}
+
+/* ---------- BACKGROUND LAYERS ---------- */
+.cyber-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+  display: block;
+}
+
+#cursor-glow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 520px;
+  height: 520px;
+  margin: -260px 0 0 -260px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(0, 240, 255, 0.12),
+    rgba(255, 43, 214, 0.06) 42%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: -2;
+  mix-blend-mode: screen;
+  will-change: transform;
+}
+
+.fx-grid {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background-image:
+    linear-gradient(var(--line-soft) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(circle at 50% 22%, #000 0%, transparent 80%);
+  -webkit-mask-image: radial-gradient(circle at 50% 22%, #000 0%, transparent 80%);
+  opacity: 0.6;
+}
+
+/* overlays (au-dessus, sans bloquer les clics) */
+.fx-vignette {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  background: radial-gradient(125% 95% at 50% -5%, transparent 52%, rgba(0, 0, 0, 0.6) 100%);
+}
+.fx-scanlines {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.16),
+    rgba(0, 0, 0, 0.16) 1px,
+    transparent 2px,
+    transparent 3px
+  );
+  mix-blend-mode: multiply;
+  opacity: 0.4;
+  animation: flicker 7s infinite;
+}
+.fx-grain {
+  position: fixed;
+  inset: -50%;
+  z-index: 51;
+  pointer-events: none;
+  opacity: 0.045;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain 0.6s steps(3) infinite;
+}

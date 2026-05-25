@@ -1,0 +1,129 @@
+.hud {
+  position: sticky;
+  top: 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 18px;
+  background: var(--glass);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+}
+.hud-title {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--ink-faint);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.hud-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  color: var(--green);
+  animation: pulse 2s infinite;
+}
+
+.hud-ring {
+  position: relative;
+  width: 92px;
+  height: 92px;
+  align-self: center;
+}
+.hud-ring::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(
+    var(--cyan) calc(var(--p) * 1%),
+    rgba(255, 255, 255, 0.06) 0
+  );
+  -webkit-mask: radial-gradient(closest-side, transparent 66%, #000 67%);
+  mask: radial-gradient(closest-side, transparent 66%, #000 67%);
+  box-shadow: 0 0 22px rgba(0, 240, 255, 0.25);
+}
+.hud-ring-val {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 20px;
+  color: #eef4fb;
+}
+
+.hud-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.hud-node {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 11px;
+  border-radius: 9px;
+  color: var(--ink-dim);
+  font-size: 13.5px;
+  border: 1px solid transparent;
+  transition: 0.16s;
+}
+.hud-node:hover {
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--ink);
+}
+.hud-node.active {
+  background: color-mix(in srgb, var(--sa) 13%, transparent);
+  border-color: color-mix(in srgb, var(--sa) 40%, transparent);
+  color: #f3f8ff;
+  box-shadow: 0 0 18px color-mix(in srgb, var(--sa) 22%, transparent);
+}
+.hud-node-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-faint);
+}
+.hud-node.active .hud-node-num {
+  color: var(--sa);
+}
+.hud-node-label {
+  flex: 1;
+  line-height: 1.2;
+}
+.hud-node-count {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--ink-faint);
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 6px;
+  padding: 1px 7px;
+}
+.hud-node-count.full {
+  color: var(--green);
+  background: rgba(0, 255, 156, 0.12);
+}
+
+.hud-reset {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: var(--ink-faint);
+  background: none;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px;
+  cursor: pointer;
+  transition: 0.16s;
+}
+.hud-reset:hover {
+  color: var(--magenta);
+  border-color: var(--magenta);
+}

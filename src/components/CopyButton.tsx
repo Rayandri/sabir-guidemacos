@@ -1,18 +1,14 @@
 import { useState } from "react";
 
-type Props = {
-  text: string;
-  label?: string;
-};
+type Props = { text: string; label?: string };
 
-export default function CopyButton({ text, label = "copier" }: Props) {
+export default function CopyButton({ text, label = "COPY" }: Props) {
   const [copied, setCopied] = useState(false);
 
   async function copy() {
     try {
       await navigator.clipboard.writeText(text);
     } catch {
-      // fallback pour les contextes sans clipboard API
       const ta = document.createElement("textarea");
       ta.value = text;
       ta.style.position = "fixed";
@@ -31,9 +27,9 @@ export default function CopyButton({ text, label = "copier" }: Props) {
       type="button"
       className={`copy-btn${copied ? " is-copied" : ""}`}
       onClick={copy}
-      aria-label="Copier la commande"
+      aria-label="Copier"
     >
-      {copied ? "copié ✓" : label}
+      {copied ? "COPIED ✓" : label}
     </button>
   );
 }
